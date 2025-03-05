@@ -93,10 +93,10 @@ const App = () => {
     return (
       <div className='d-flex justify-content-center align-items-center text-light' style={{ height: "100vh", width: "100%" }}>
         <div className="row d-flex justify-content-center align-items-center">
-          <div className="col-4">
+          <div className="col-8 col-lg-4">
             <SignUp />
           </div>
-          <div className="col-4">
+          <div className="col-8 col-lg-4">
             <LogIn />
           </div>
           <div className='col-8 d-flex justify-content-center'>
