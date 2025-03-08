@@ -5,6 +5,7 @@ import { BsGoogle } from "react-icons/bs";
 import { IconContext } from 'react-icons/lib';
 import SignUp from './pages/SignUp';
 import LogIn from './pages/LogIn';
+import { MessageList, MinChatUiProvider } from '@minchat/react-chat-ui';
 
 const App = () => {
   const [session, setSession] = useState([]);
@@ -71,7 +72,7 @@ const App = () => {
 
   //add message
   const addMessage = async (e) => {
-    
+
     await e.preventDefault();
     if (newMessage === '') {
       return
@@ -114,7 +115,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    if(session){
+    if (session) {
       document.querySelector('.all-messages').scrollTop = document.querySelector('.all-messages').scrollHeight;
     }
   }, [messages])
@@ -139,21 +140,31 @@ const App = () => {
   else {
     return (
 
-      <div>
+      <MinChatUiProvider theme="#6ea9d7">
         <button onClick={signOut} className='btn btn-danger fs-2'>Sign out</button>
         <h3 className='text-light'>Welcome {session?.user?.email}</h3>
 
         <div className="messages-box text-light row m-0 d-flex justify-content-center">
-          <div className="col-12 col-md-4 col-xl-3" style={{ height: "80vh", overflowY: "scroll", background: "#021526" }}>
+          <div className="col-12 col-md-4 col-xl-3" style={{ height: "80vh", background: "#021526" }}>
             <div className="users-list">
               <h4>Users</h4>
-              <div className='all-users list-unstyled'>
-                <div onClick={()=>{setSelectedUser('public'); setSelectedClass('publicchatsecbtn')}} id='publicchatsecbtn' className='ps-2 d-flex my-2 align-items-center rounded-5 selected' style={{ height: "50px", width: "100%", background: "#03346E" }}>Public</div>
-                {allUsers.map((user, index) => (
-                  <div id={user.id} onClick={()=>{setSelectedUser(user.email); setSelectedClass(user.id);}} className='d-flex my-2 align-items-center rounded-5' style={{ height: "50px", width: "100%", background: "#03346E" }} key={index}>
-                    <p className='ps-2'>{user.email}</p>
+              <div className='all-users list-unstyled' style={{ height: "75vh", overflowY: "scroll" }}>
+                <div onClick={() => { setSelectedUser('public'); setSelectedClass('publicchatsecbtn') }} id='publicchatsecbtn' className='ps-2 d-flex my-2 align-items-center rounded-5 selected' style={{ height: "50px", width: "100%", background: "#03346E" }}>Public</div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      SHOW MORE USERS
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+
+                    {allUsers.map((user, index) => (
+                      <div id={user.id} onClick={() => { setSelectedUser(user.email); setSelectedClass(user.id); }} className='d-flex my-2 align-items-center rounded-5' style={{ height: "50px", width: "100%", background: "#03346E" }} key={index}>
+                        <p className='ps-2'>{user.email}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
             </div>
           </div>
@@ -161,11 +172,27 @@ const App = () => {
             <div className="messages">
               <h4>Messages</h4>
               <div className='all-messages' style={{ height: "70vh", overflowY: "scroll" }}>
-                {messages.filter(item=>(item.sender === session.user.email && item.to === selectedUser) || (item.sender === selectedUser && item.to === session.user.email) || (item.to === 'public' && selectedUser==='public')).map((message, index) => (
+                {/* {messages.filter(item=>(item.sender === session.user.email && item.to === selectedUser) || (item.sender === selectedUser && item.to === session.user.email) || (item.to === 'public' && selectedUser==='public')).map((message, index) => (
                   <div className={`d-flex my-2 align-items-center py-1 rounded-5 ${message.sender===session.user.email?"selected":""}`} style={{ width: "100%", background: "#03346E" }} key={index}>
                     <p className='ps-2'>{message.sender} : {message.message}</p>
                   </div>
-                ))}
+                ))} */}
+                <MessageList
+                  currentUserId='dan'
+                  messages={
+                    messages.filter(item => (item.sender === session.user.email && item.to === selectedUser) || (item.sender === selectedUser && item.to === session.user.email) || (item.to === 'public' && selectedUser === 'public')).map((message) => {
+                      return {
+                        text: message.message,
+                        user: {
+                          id: message.sender,
+                          name: message.sender,
+                        },
+                      }
+                    }
+                    )
+                  }
+                />
+
               </div>
             </div>
             <form action="" className='sendmsgform' onSubmit={addMessage}>
@@ -176,7 +203,7 @@ const App = () => {
         </div>
 
 
-      </div>
+      </MinChatUiProvider>
     )
   }
 }
