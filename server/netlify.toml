@@ -2,6 +2,6 @@
     functions = "functions"
 [[redirects]]  
   from = "/*"  
-  to = "http://localhost:3000/"  
+  to = "http://localhost:5173/"  
   status = 200  
   force = true
