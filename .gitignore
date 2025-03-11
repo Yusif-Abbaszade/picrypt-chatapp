@@ -1,9 +1,4 @@
-client/node_modules
-client/dist
-client/.env
-server/node_modules
-server/dist
-server/.env
+
 
 node_modules
 
