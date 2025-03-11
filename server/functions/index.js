@@ -42,9 +42,9 @@ app.post('/decrypt', (req, res) => {
 });
 
 
-// app.listen(process.env.PORT, () => {
-//     console.log(`Server is running on port ${process.env.PORT}`);
-// });
+app.listen(process.env.PORT || 4444, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
+});
 
-app.use('/.netlify/functions/index', app);
-module.exports.handler = serverless(app);
+// app.use('/.netlify/functions/index', app);
+// module.exports.handler = serverless(app);
