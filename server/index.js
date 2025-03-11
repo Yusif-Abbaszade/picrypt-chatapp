@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import serverless from 'serverless-http';
 import encryptMessage from './modules/encrypt.js';
 import decryptMessage from './modules/decrypt.js';
 import supabaseAdmin from './modules/supabaseAdmin.js';
