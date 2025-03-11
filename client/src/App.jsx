@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
-import { supabase, supabaseAdmin } from '../supabaseClient';
+import { supabase } from '../supabaseClient';
 import { BsGoogle } from "react-icons/bs";
 import { IconContext } from 'react-icons/lib';
 import SignUp from './pages/SignUp';
@@ -33,8 +33,9 @@ const App = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const { data } = await supabaseAdmin.auth.admin.listUsers();
-      setAllUsers(data.users);
+      axios.get('https://realtime-chatapp-bu6c.onrender.com/get-all-users')
+        .then((res)=>{setAllUsers(res.data.users)})
+        .catch((err)=>{console.log(err)});
     }
     fetchUsers();
   }, [])
@@ -72,7 +73,7 @@ const App = () => {
 
   //encrypt message
   const encryptMessage = async (message) => {
-    axios.post('https://pi-realtime-chatapp-backend-server.netlify.app/.netlify/functions/index/encrypt', {
+    axios.post('https://realtime-chatapp-bu6c.onrender.com/encrypt', {
       message
     }).then((response) => {
       console.log(response.data);
