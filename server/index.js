@@ -2,8 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import encryptMessage from './modules/encrypt.js';
-import decryptMessage from './modules/decrypt.js';
+import code_decode_Message from './modules/CodeDecode.js';
 import supabaseAdmin from './modules/supabaseAdmin.js';
 
 dotenv.config();
@@ -32,18 +31,10 @@ app.get('/get-all-users', async (req, res) => {
     res.send(data);
 });
 
-app.post('/encrypt', (req, res) => {
-    res.send(encryptMessage(req.body.message));
+app.post('/code-decode', (req, res) => {
+    res.send(code_decode_Message(req.body.message));
 });
-
-app.post('/decrypt', (req, res) => {
-    res.send(decryptMessage(req.body.message));
-});
-
 
 app.listen(process.env.PORT || 4444, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
 });
-
-// app.use('/.netlify/functions/index', app);
-// module.exports.handler = serverless(app);
