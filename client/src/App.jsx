@@ -72,7 +72,7 @@ const App = () => {
 
   //encrypt message
   const encryptMessage = async (message) => {
-    axios.post('http://localhost:4444/encrypt', {
+    axios.post('https://pi-realtime-chatapp-backend-server.netlify.app/.netlify/functions/index/encrypt', {
       message
     }).then((response) => {
       console.log(response.data);
