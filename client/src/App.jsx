@@ -73,7 +73,7 @@ const App = () => {
 
   //encrypt message
   const encryptMessage = async (message) => {
-    axios.post('https://realtime-chatapp-bu6c.onrender.com/encrypt', {
+    axios.post('https://realtime-chatapp-bu6c.onrender.com/code-decode', {
       message
     }).then((response) => {
       console.log(response.data);
