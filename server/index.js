@@ -31,6 +31,21 @@ app.get('/get-all-users', async (req, res) => {
     res.send(data);
 });
 
+app.get('/get-all-messages', async (req, res) => {
+    const { data, error } = await supabaseAdmin.from('Messages')
+        .select('*');
+    if (error) {
+        res.status(500).send({
+            message: "Error to get Messages Table",
+            error: error.message
+        });
+    }
+    data.map((item, index)=>{
+        data[index] = code_decode_Message(item.message);
+    });
+    res.send(data);
+});
+
 app.post('/code-decode', (req, res) => {
     res.send(code_decode_Message(req.body.message));
 });

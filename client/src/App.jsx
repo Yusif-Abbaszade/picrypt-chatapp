@@ -13,6 +13,7 @@ const App = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [allUsers, setAllUsers] = useState([]);
+  const [encDecData, setEncDecData] = useState('');
   const [selectedUser, setSelectedUser] = useState('public');
 
   useEffect(() => {
@@ -34,8 +35,8 @@ const App = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       axios.get('https://realtime-chatapp-bu6c.onrender.com/get-all-users')
-        .then((res)=>{setAllUsers(res.data.users)})
-        .catch((err)=>{console.log(err)});
+        .then((res) => { setAllUsers(res.data.users) })
+        .catch((err) => { console.log(err) });
     }
     fetchUsers();
   }, [])
@@ -67,33 +68,38 @@ const App = () => {
     const { data } = await supabase.from('Messages').select('*');
 
     if (data) {
+      // data.map(async (item, index)=>{
+      //   data[index] = {...data[index], message:await codeDecodeMessage(item.message)}
+      // })
       setMessages(data);
     }
   }
 
   //encrypt message
-  const encryptMessage = async (message) => {
-    axios.post('https://realtime-chatapp-bu6c.onrender.com/code-decode', {
+  const codeDecodeMessage = async (message) => {
+    const response = await axios.post('https://realtime-chatapp-bu6c.onrender.com/code-decode', {
       message
-    }).then((response) => {
-      console.log(response.data);
     })
+    return response.data;
+
   }
 
   //add message
   const addMessage = async (e) => {
 
+
+
     await e.preventDefault();
 
-    let encryptedMessage = await encryptMessage(newMessage);
-    console.log(encryptedMessage);
+
+    let encryptedData = await codeDecodeMessage(newMessage);
     if (newMessage === '') {
       return
     }
     await supabase
       .from('Messages')
       .insert([
-        { sender: session.user.email, message: newMessage, to: selectedUser },
+        { sender: session.user.email, message: await encryptedData, to: selectedUser },
       ]);
 
     await fetchMessages();
@@ -193,12 +199,16 @@ const App = () => {
                 <MessageList
                   currentUserId='dan'
                   messages={
-                    messages.filter(item => (item.sender === session.user.email && item.to === selectedUser) || (item.sender === selectedUser && item.to === session.user.email) || (item.to === 'public' && selectedUser === 'public')).map((message) => {
+                    messages?.filter(item => (item.sender === session.user.email && item.to === selectedUser) || (item.sender === selectedUser && item.to === session.user.email) || (item.to === 'public' && selectedUser === 'public'))?.map(async (message) => {
+                      const response = await axios.post('https://realtime-chatapp-bu6c.onrender.com/code-decode', {
+                        message:message.message
+                      })
+                      
                       return {
-                        text: message.message,
+                        text: await response.data,
                         user: {
-                          id: message.sender,
-                          name: message.sender,
+                          id: await message.sender,
+                          name: await message.sender,
                         },
                       }
                     }
@@ -209,7 +219,7 @@ const App = () => {
               </div>
             </div>
             <form action="" className='sendmsgform' onSubmit={addMessage}>
-              <input type="text" className='msgbox' onChange={(e) => { setNewMessage(e.target.value); }} />
+              <input type="text" className='msgbox' onChange={(e) => { setNewMessage((e.target.value)); }} />
               <button type='submit' className='btn btn-dark'>Send</button>
             </form>
           </div>
