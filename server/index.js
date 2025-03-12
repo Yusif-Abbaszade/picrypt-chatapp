@@ -41,7 +41,7 @@ app.get('/get-all-messages', async (req, res) => {
         });
     }
     data.map((item, index)=>{
-        data[index] = code_decode_Message(item.message);
+        data[index].message = code_decode_Message(item.message);
     });
     res.send(data);
 });
