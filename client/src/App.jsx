@@ -65,14 +65,17 @@ const App = () => {
 
   //fetch messages
   const fetchMessages = async () => {
-    const { data } = await supabase.from('Messages').select('*');
+    // const { data } = await supabase.from('Messages').select('*');
 
-    if (data) {
-      // data.map(async (item, index)=>{
-      //   data[index] = {...data[index], message:await codeDecodeMessage(item.message)}
-      // })
-      setMessages(data);
-    }
+    // if (data) {
+    //   // data.map(async (item, index)=>{
+    //   //   data[index] = {...data[index], message:await codeDecodeMessage(item.message)}
+    //   // })
+    //   setMessages(data);
+    // }
+    axios.get('https://realtime-chatapp-bu6c.onrender.com/get-all-messages')
+      .then(res => setMessages(res.data))
+      .catch(err => console.log(err))
   }
 
   //encrypt message
@@ -199,16 +202,12 @@ const App = () => {
                 <MessageList
                   currentUserId='dan'
                   messages={
-                    messages?.filter(item => (item.sender === session.user.email && item.to === selectedUser) || (item.sender === selectedUser && item.to === session.user.email) || (item.to === 'public' && selectedUser === 'public'))?.map(async (message) => {
-                      const response = await axios.post('https://realtime-chatapp-bu6c.onrender.com/code-decode', {
-                        message:message.message
-                      })
-                      
+                    messages?.filter(item => (item.sender === session.user.email && item.to === selectedUser) || (item.sender === selectedUser && item.to === session.user.email) || (item.to === 'public' && selectedUser === 'public'))?.map((message) => {
                       return {
-                        text: await response.data,
+                        text: message.message,
                         user: {
-                          id: await message.sender,
-                          name: await message.sender,
+                          id: message.sender,
+                          name: message.sender,
                         },
                       }
                     }
