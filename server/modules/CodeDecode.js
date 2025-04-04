@@ -6,27 +6,42 @@ function decimalToBinary(decimal) {
 function binaryToDecimal(binary) {
     return parseInt(binary, 2);
 }
-
+// export function encryptData(data) {
+//     const cipher = crypto.createCipheriv('aes-256-cbc', key, encryptionIV)
+//     return Buffer.from(
+//         cipher.update(data, 'utf8', 'hex') + cipher.final('hex')
+//     ).toString('base64') // Encrypts data and converts to hex and base64
+// }
+// export function decryptData(encryptedData) {
+//     const buff = Buffer.from(encryptedData, 'base64')
+//     const decipher = crypto.createDecipheriv(ecnryption_method, key, encryptionIV)
+//     return (
+//         decipher.update(buff.toString('utf8'), 'hex', 'utf8') +
+//         decipher.final('utf8')
+//     ) // Decrypts data and converts to utf8
+// }
 
 export const encryptWithAes = (message, key) => {
-    const cipher = crypto.createCipher('aes192', key);
-    let encrypted = cipher.update(message, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-    return encrypted;
+    const cipher = crypto.createCipheriv('aes-256-ccm', key, key);
+    return Buffer.from(
+        cipher.update(message, 'utf8', 'hex') + cipher.final('hex')
+    ).toString('base64')
 }
 
 export const decryptWithAes = (encryptedMessage, key) => {
-    const decipher = crypto.createDecipher('aes192', key);
-    let decrypted = decipher.update(encryptedMessage, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-    return decrypted;
+    const buff = Buffer.from(encryptedMessage, 'base64');
+    const decipher = crypto.createDecipheriv('aes-256-ccm', key, key);
+    return(
+        decipher.update(buff.toString('utf8'), 'hex', 'utf8')+
+        decipher.final('utf8')
+    )
 }
 
 export const code_decode_Message = (message, enckey) => {
     let encryptMessage = '';
     for (let i = 0; i < message.length; i++) {
         let num1 = message.charCodeAt(i);
-        let num2 = Number(String(enckey).charAt(i%6));
+        let num2 = Number(String(enckey).charAt(i % 6));
         num1 = decimalToBinary(parseInt(num1));
         num2 = decimalToBinary(parseInt(num2));
 
