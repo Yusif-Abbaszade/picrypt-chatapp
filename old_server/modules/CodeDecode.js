@@ -1,3 +1,4 @@
+import pidata from '../utils/pidata.js';
 
 function decimalToBinary(decimal) {
     return decimal.toString(2);
@@ -9,11 +10,11 @@ function binaryToDecimal(binary) {
 
 
 
-const code_decode_Message = (message, enckey) => {
+const code_decode_Message = (message) => {
     let encryptMessage = '';
     for (let i = 0; i < message.length; i++) {
         let num1 = message.charCodeAt(i);
-        let num2 = enckey.charAt(0);
+        let num2 = pidata.charAt(i);
         num1 = decimalToBinary(parseInt(num1));
         num2 = decimalToBinary(parseInt(num2));
 

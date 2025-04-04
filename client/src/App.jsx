@@ -90,10 +90,11 @@ const App = () => {
       .catch(err => console.log(err))
   }
 
-  //encrypt message
-  const codeDecodeMessage = async (message) => {
+  //encrypt-decrypt message
+  const codeDecodeMessage = async (message, key) => {
     const response = await axios.post('https://realtime-chatapp-bu6c.onrender.com/code-decode', {
-      message
+      message,
+      key
     })
     return response.data;
   }
@@ -102,14 +103,19 @@ const App = () => {
 
     await e.preventDefault();
 
-    let encryptedData = await codeDecodeMessage(newMessage);
     if (newMessage === '') {
       return
     }
+    let date = new Date();
+    let hour = date.toLocaleTimeString([], { hour: "2-digit" }).substring(0, 2);
+    let min = date.toLocaleTimeString([], { minute: "2-digit" }).substring(0, 2);
+    let sec = date.toLocaleTimeString([], { second: "2-digit" }).substring(0, 2);
+    let encryptedData = await codeDecodeMessage(newMessage, sec+min+hour);
+
     await supabase
       .from('Messages')
       .insert([
-        { sender: session.user.email, message: await encryptedData, to: selectedUser },
+        { sender: session.user.email, message: await encryptedData, to: selectedUser, time: sec + min + hour }
       ]);
 
     await fetchMessages();
@@ -117,12 +123,12 @@ const App = () => {
     document.querySelector('.msgbox').value = '';
   }
 
-  
+
 
 
   if (!session) {
     return (
-      <div className='d-flex justify-content-center align-items-center text-light' style={{ height: "100vh", width: "100%", background:'#212529' }}>
+      <div className='d-flex justify-content-center align-items-center text-light' style={{ height: "100vh", width: "100%", background: '#212529' }}>
         <div className="row d-flex justify-content-center align-items-center">
           <div className="col-8 col-lg-4">
             <SignUp />
