@@ -55,13 +55,21 @@ export const decryptWithAes = (encryptedMessage, key) => {
     const authTag = buff.slice(12, 28); // Next 16 bytes as auth tag
     const encrypted = buff.slice(28); // Remaining bytes as encrypted data
 
+    // Ensure `encrypted` is a Buffer
+    if (!Buffer.isBuffer(encrypted)) {
+        throw new TypeError('Invalid encrypted data format');
+    }
+
     const decipher = crypto.createDecipheriv('aes-256-ccm', enckey, IV, { authTagLength: 16 });
     decipher.setAuthTag(authTag);
 
-    return (
-        decipher.update(encrypted, null, 'utf8') +
-        decipher.final('utf8')
-    );
+    // Decrypt the data
+    const decrypted = Buffer.concat([
+        decipher.update(encrypted),
+        decipher.final()
+    ]);
+
+    return decrypted.toString('utf8');
 };
 
 export const code_decode_Message = (message, enckey) => {
