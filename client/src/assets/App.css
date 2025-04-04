@@ -1,0 +1,51 @@
+@media (max-width:550px) {
+    .userspanel-sec {
+        position: absolute;
+        z-index: 0;
+        width: 100% !important;
+    }
+
+    .chatcontainer-sec {
+        position: absolute;
+        z-index: 1;
+        width: 100% !important;
+    }
+}
+
+.sendmsgform {
+    input {
+        border: none;
+        background: #6EACDA;
+        width: 80%;
+        height: 100%;
+        border-radius: 10px;
+    }
+
+    button {
+        width: 20%;
+        height: 100%;
+    }
+
+    height: 4vh;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: gray;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: black;
+}
+.selected {
+    background-color: #C6E3FA !important;
+}
