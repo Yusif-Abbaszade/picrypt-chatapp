@@ -26,36 +26,43 @@ export const encryptWithAes = (message, key) => {
         .createHash('sha512')
         .update(key)
         .digest('hex')
-        .substring(0,32)
+        .substring(0, 32); // 32 bytes for AES-256 key
     const IV = crypto
         .createHash('sha512')
         .update(key)
-        .digest('hex')
-        .substring(0,16)
-    const cipher = crypto.createCipheriv('aes-256-ccm', enckey, IV);
-    return Buffer.from(
-        cipher.update(message, 'utf8', 'hex') + cipher.final('hex')
-    ).toString('base64')
-}
+        .digest()
+        .slice(0, 12); // 12 bytes for AES-256-CCM IV
+
+    const cipher = crypto.createCipheriv('aes-256-ccm', enckey, IV, { authTagLength: 16 });
+    const encrypted = Buffer.concat([
+        cipher.update(message, 'utf8'),
+        cipher.final()
+    ]);
+    const authTag = cipher.getAuthTag();
+
+    return Buffer.concat([IV, authTag, encrypted]).toString('base64');
+};
 
 export const decryptWithAes = (encryptedMessage, key) => {
     const enckey = crypto
         .createHash('sha512')
         .update(key)
         .digest('hex')
-        .substring(0,32)
-    const IV = crypto
-        .createHash('sha512')
-        .update(key)
-        .digest('hex')
-        .substring(0,16)
+        .substring(0, 32); // 32 bytes for AES-256 key
+
     const buff = Buffer.from(encryptedMessage, 'base64');
-    const decipher = crypto.createDecipheriv('aes-256-ccm', enckey, IV);
-    return(
-        decipher.update(buff.toString('utf8'), 'hex', 'utf8')+
+    const IV = buff.slice(0, 12); // Extract the first 12 bytes as IV
+    const authTag = buff.slice(12, 28); // Next 16 bytes as auth tag
+    const encrypted = buff.slice(28); // Remaining bytes as encrypted data
+
+    const decipher = crypto.createDecipheriv('aes-256-ccm', enckey, IV, { authTagLength: 16 });
+    decipher.setAuthTag(authTag);
+
+    return (
+        decipher.update(encrypted, null, 'utf8') +
         decipher.final('utf8')
-    )
-}
+    );
+};
 
 export const code_decode_Message = (message, enckey) => {
     let encryptMessage = '';
