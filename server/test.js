@@ -51,8 +51,8 @@ const decryptWithAes = (encryptedMessage, key) => {
 };
 
 
-const key = '1604';
-const message = 'lOK0AzB//GiCyHPoZyMlhn8A2cHGYvLFFwFYvxQbuLud';
+const key = '320432';
+const message = 'X2ZmncZ1CKxGSe3TU5yRk3jKe/XV3sB51Vegexpi';
 
 // const encryptedMessage = encryptWithAes(message, key);
 // console.log('Encrypted:', encryptedMessage);

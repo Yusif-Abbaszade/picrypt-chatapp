@@ -110,12 +110,16 @@ const App = () => {
     let hour = date.toLocaleTimeString([], { hour: "2-digit" }).substring(0, 2);
     let min = date.toLocaleTimeString([], { minute: "2-digit" }).substring(0, 2);
     let sec = date.toLocaleTimeString([], { second: "2-digit" }).substring(0, 2);
-    let encryptedData = await codeDecodeMessage(newMessage, sec+min+hour);
+    let key = String(sec + min + hour);
+    while (String(key).length < 6) {
+      key += '0';
+    }
+    let encryptedData = await codeDecodeMessage(newMessage, key);
 
     await supabase
       .from('Messages')
       .insert([
-        { sender: session.user.email, message: await encryptedData, to: selectedUser, time: sec + min + hour }
+        { sender: session.user.email, message: await encryptedData, to: selectedUser, time: key }
       ]);
 
     await fetchMessages();
