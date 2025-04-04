@@ -33,7 +33,7 @@ const ChatContainer = ({ isSmallDevice, setIsSmallDevice, setIsChatContainerOpen
                     <IoArrowBackCircle />
                 </IconContext.Provider>
             </button>
-            <div className="messages-sec" style={{ height: "calc(100vh - 50px)", overflowY: "scroll" }}>
+            <div className="messages-sec" style={{ height: "calc(100vh - 100px)", overflowY: "scroll" }}>
                 {messages?.filter(item => (item.sender === session.user.email && item.to === selectedUser) || (item.sender === selectedUser && item.to === session.user.email) || (item.to === 'public' && selectedUser === 'public'))?.map((item, index) => (
                     <div key={index} className="d-flex flex-row align-items-center mb-2" style={{ position: "relative" }}>
                         <div className="avatar-sec d-flex flex-row align-items-center">
