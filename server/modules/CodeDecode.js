@@ -24,12 +24,12 @@ function binaryToDecimal(binary) {
 export const encryptWithAes = (message, key) => {
     const enckey = crypto
         .createHash('sha512')
-        .update(key)
+        .update(String(key))
         .digest('hex')
         .substring(0, 32); // 32 bytes for AES-256 key
     const IV = crypto
         .createHash('sha512')
-        .update(key)
+        .update(String(key))
         .digest()
         .slice(0, 12); // 12 bytes for AES-256-CCM IV
 
@@ -46,7 +46,7 @@ export const encryptWithAes = (message, key) => {
 export const decryptWithAes = (encryptedMessage, key) => {
     const enckey = crypto
         .createHash('sha512')
-        .update(key)
+        .update(String(key))
         .digest('hex')
         .substring(0, 32); // 32 bytes for AES-256 key
 
