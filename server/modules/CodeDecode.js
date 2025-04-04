@@ -1,4 +1,4 @@
-
+import crypto from 'crypto';
 function decimalToBinary(decimal) {
     return decimal.toString(2);
 }
@@ -8,8 +8,21 @@ function binaryToDecimal(binary) {
 }
 
 
+export const encryptWithAes = (message, key) => {
+    const cipher = crypto.createCipher('aes192', key);
+    let encrypted = cipher.update(message, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    return encrypted;
+}
 
-const code_decode_Message = (message, enckey) => {
+export const decryptWithAes = (encryptedMessage, key) => {
+    const decipher = crypto.createDecipher('aes192', key);
+    let decrypted = decipher.update(encryptedMessage, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+}
+
+export const code_decode_Message = (message, enckey) => {
     let encryptMessage = '';
     for (let i = 0; i < message.length; i++) {
         let num1 = message.charCodeAt(i);
@@ -42,6 +55,3 @@ const code_decode_Message = (message, enckey) => {
     return encryptMessage;
 };
 
-
-
-export default code_decode_Message;

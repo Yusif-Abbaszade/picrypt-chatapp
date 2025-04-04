@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import code_decode_Message from './modules/CodeDecode.js';
+import {code_decode_Message, encryptWithAes, decryptWithAes} from './modules/CodeDecode.js';
 import supabaseAdmin from './modules/supabaseAdmin.js';
 
 dotenv.config();
@@ -55,13 +55,13 @@ app.get('/get-all-messages', async (req, res) => {
         });
     }
     data.map((item, index) => {
-        data[index].message = code_decode_Message(item.message, item.time);
+        data[index].message = code_decode_Message(decryptWithAes(item.message, item.time), item.time);
     });
     res.send(data);
 });
 
 app.post('/code-decode', async (req, res) => {
-    res.send(code_decode_Message(req.body.message, req.body.key));
+    res.send(encryptWithAes(code_decode_Message(req.body.message, req.body.key), req.body.key));
 });
 
 app.listen(process.env.PORT || 4444, () => {
