@@ -13,7 +13,7 @@ const code_decode_Message = (message, enckey) => {
     let encryptMessage = '';
     for (let i = 0; i < message.length; i++) {
         let num1 = message.charCodeAt(i);
-        let num2 = parseInt(enckey).charAt(0);
+        let num2 = parseInt(enckey.charAt(0));
         num1 = decimalToBinary(parseInt(num1));
         num2 = decimalToBinary(parseInt(num2));
 
