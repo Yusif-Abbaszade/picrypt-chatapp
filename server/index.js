@@ -4,6 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import {code_decode_Message, encryptWithAes, decryptWithAes} from './modules/CodeDecode.js';
 import supabaseAdmin from './modules/supabaseAdmin.js';
+import crypto from 'crypto'
 
 dotenv.config();
 
