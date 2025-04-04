@@ -22,15 +22,35 @@ function binaryToDecimal(binary) {
 // }
 
 export const encryptWithAes = (message, key) => {
-    const cipher = crypto.createCipheriv('aes-256-ccm', key, key);
+    const enckey = crypto
+        .createHash('sha512')
+        .update(key)
+        .digest('hex')
+        .substring(0,32)
+    const IV = crypto
+        .createHash('sha512')
+        .update(key)
+        .digest('hex')
+        .substring(0,16)
+    const cipher = crypto.createCipheriv('aes-256-ccm', enckey, IV);
     return Buffer.from(
         cipher.update(message, 'utf8', 'hex') + cipher.final('hex')
     ).toString('base64')
 }
 
 export const decryptWithAes = (encryptedMessage, key) => {
+    const enckey = crypto
+        .createHash('sha512')
+        .update(key)
+        .digest('hex')
+        .substring(0,32)
+    const IV = crypto
+        .createHash('sha512')
+        .update(key)
+        .digest('hex')
+        .substring(0,16)
     const buff = Buffer.from(encryptedMessage, 'base64');
-    const decipher = crypto.createDecipheriv('aes-256-ccm', key, key);
+    const decipher = crypto.createDecipheriv('aes-256-ccm', enckey, IV);
     return(
         decipher.update(buff.toString('utf8'), 'hex', 'utf8')+
         decipher.final('utf8')
