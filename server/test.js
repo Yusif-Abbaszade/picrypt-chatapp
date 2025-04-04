@@ -51,11 +51,11 @@ const decryptWithAes = (encryptedMessage, key) => {
 };
 
 
-const key = 421412;
-const message = 'Hello, World!';
+const key = '1604';
+const message = 'lOK0AzB//GiCyHPoZyMlhn8A2cHGYvLFFwFYvxQbuLud';
 
-const encryptedMessage = encryptWithAes(message, key);
-console.log('Encrypted:', encryptedMessage);
+// const encryptedMessage = encryptWithAes(message, key);
+// console.log('Encrypted:', encryptedMessage);
 
-const decryptedMessage = decryptWithAes(encryptedMessage, key);
+const decryptedMessage = decryptWithAes(message, key);
 console.log('Decrypted:', decryptedMessage);
