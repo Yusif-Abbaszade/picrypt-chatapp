@@ -74,6 +74,9 @@ export const decryptWithAes = (encryptedMessage, key) => {
 
 export const code_decode_Message = (message, enckey) => {
     let encryptMessage = '';
+    while (String(enckey).length < 6) {
+        enckey += '0';
+    }
     for (let i = 0; i < message.length; i++) {
         let num1 = message.charCodeAt(i);
         let num2 = Number(String(enckey).charAt(i % 6));
