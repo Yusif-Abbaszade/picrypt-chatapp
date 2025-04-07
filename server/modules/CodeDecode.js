@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import piDigits from '../utils/pidata.js';
 function decimalToBinary(decimal) {
     return decimal.toString(2);
 }
@@ -108,3 +109,70 @@ export const code_decode_Message = (message, enckey) => {
     return encryptMessage;
 };
 
+export function encrypt_with_pi(text) {
+    let result = "";
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const u = char.charCodeAt(0); // Unicode value of the character
+        if (i >= piDigits.length) {
+            throw new Error(`Pi-də ${i}-ci rəqəm mövcud deyil.`); // Ensure `i` is within bounds
+        }
+
+        const p = parseInt(piDigits[i]); // Use the index `i` to fetch `p` from `piDigits`
+
+        let u_new, marker;
+        if (i % 2 === 0 && p % 2 === 0) {
+            u_new = u + i + p + OFFSET; // Add OFFSET to ensure u_new is positive
+            marker = '1';
+        } else if (i % 2 === 0 && p % 2 === 1) {
+            u_new = u + i - p + OFFSET; // Add OFFSET
+            marker = '2';
+        } else if (i % 2 === 1 && p % 2 === 1) {
+            u_new = u - i - p + OFFSET; // Add OFFSET
+            marker = '3';
+        } else {
+            // Odd index, even `p`
+            u_new = u - i + p + OFFSET; // Add OFFSET
+            marker = '4';
+        }
+
+        result += String.fromCharCode(u_new) + marker;
+    }
+    return result;
+}
+
+
+export function decrypt_with_pi(text) {
+    let result = "";
+    let i = 0;
+    while (i < text.length) {
+        const char = text[i];
+        const marker = text[i + 1];
+        const u_new = char.charCodeAt(0) - OFFSET; // Subtract OFFSET to restore the original value
+
+        const i_index = result.length; // Correctly calculate the index based on the decrypted result length
+
+        const p = parseInt(piDigits[i_index]); // Use the same index logic as in `encrypt`
+
+        let u;
+        if (marker === '1') {
+            // u_new = u + i + p + OFFSET → u = u_new - i - p
+            u = u_new - i_index - p;
+        } else if (marker === '2') {
+            // u_new = u + i - p + OFFSET → u = u_new - i + p
+            u = u_new - i_index + p;
+        } else if (marker === '3') {
+            // u_new = u - i - p + OFFSET → u = u_new + i + p
+            u = u_new + i_index + p;
+        } else if (marker === '4') {
+            // u_new = u - i + p + OFFSET → u = u_new + i - p
+            u = u_new + i_index - p;
+        } else {
+            throw new Error("Yanlış marker tapıldı!"); // Invalid marker
+        }
+
+        result += String.fromCharCode(u);
+        i += 2; // Move to the next character and marker
+    }
+    return result;
+}
