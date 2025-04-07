@@ -109,7 +109,7 @@ export const code_decode_Message = (message, enckey) => {
     return encryptMessage;
 };
 
-export function encrypt_with_pi(text) {
+export function encrypt_with_pi(text, key) {
     let result = "";
     for (let i = 0; i < text.length; i++) {
         const char = text[i];
@@ -122,17 +122,17 @@ export function encrypt_with_pi(text) {
 
         let u_new, marker;
         if (i % 2 === 0 && p % 2 === 0) {
-            u_new = u + i + p + OFFSET; // Add OFFSET to ensure u_new is positive
+            u_new = u + i + p +key; // Add OFFSET to ensure u_new is positive
             marker = '1';
         } else if (i % 2 === 0 && p % 2 === 1) {
-            u_new = u + i - p + OFFSET; // Add OFFSET
+            u_new = u + i - p +key; // Add OFFSET
             marker = '2';
         } else if (i % 2 === 1 && p % 2 === 1) {
-            u_new = u - i - p + OFFSET; // Add OFFSET
+            u_new = u - i - p +key; // Add OFFSET
             marker = '3';
         } else {
             // Odd index, even `p`
-            u_new = u - i + p + OFFSET; // Add OFFSET
+            u_new = u - i + p +key; // Add OFFSET
             marker = '4';
         }
 
@@ -142,13 +142,13 @@ export function encrypt_with_pi(text) {
 }
 
 
-export function decrypt_with_pi(text) {
+export function decrypt_with_pi(text, key) {
     let result = "";
     let i = 0;
     while (i < text.length) {
         const char = text[i];
         const marker = text[i + 1];
-        const u_new = char.charCodeAt(0) - OFFSET; // Subtract OFFSET to restore the original value
+        const u_new = char.charCodeAt(0) - key; // Subtract OFFSET to restore the original value
 
         const i_index = result.length; // Correctly calculate the index based on the decrypted result length
 

@@ -73,7 +73,7 @@ function decrypt(text) {
 }
 
 // Test the encryption and decryption
-const text = ''; // Test input
+const text = 'salam'; // Test input
 const encryptedText = encrypt(text);
 console.log(`Encrypted: ${encryptedText}`);
 const decryptedText = decrypt(encryptedText);
